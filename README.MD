@@ -38,5 +38,5 @@ EcoRoute is a web application designed to help drivers find the most fuel-effici
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/ecoroute.git
-   cd ecoroute
+   git clone https://github.com/SEO-TECH-PROJECT1/project_1.git
+   
