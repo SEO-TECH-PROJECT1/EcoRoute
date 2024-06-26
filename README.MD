@@ -13,7 +13,7 @@ EcoRoute is a web application designed to help drivers find the most fuel-effici
 ## Technology Stack
 
 - **Frontend:** Streamlit for interactive UI components.
-- **Backend:** Python with Flask framework.
+- **Backend:** Python with Flask framework (optional).
 - **APIs:**
   - Google Maps Directions API
   - Google Maps Distance Matrix API
@@ -21,7 +21,7 @@ EcoRoute is a web application designed to help drivers find the most fuel-effici
   - Google Maps Places API
   - OpenWeatherMap API
   - OpenAI ChatGPT API
-- **Database:** PostgreSQL to store user data and route histories.
+- **Database:** SQLite to store user data and route histories.
 - **CI/CD:** GitHub Actions for automated testing and style checking.
 
 ## Getting Started
@@ -29,9 +29,9 @@ EcoRoute is a web application designed to help drivers find the most fuel-effici
 ### Prerequisites
 
 - Python 3.8+
+- Google Cloud API Key
 - OpenWeatherMap API Key
 - OpenAI API Key
-- PostgreSQL Database
 
 ### Installation
 
