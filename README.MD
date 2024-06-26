@@ -29,7 +29,6 @@ EcoRoute is a web application designed to help drivers find the most fuel-effici
 ### Prerequisites
 
 - Python 3.8+
-- Google Cloud API Key
 - OpenWeatherMap API Key
 - OpenAI API Key
 
