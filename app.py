@@ -3,14 +3,23 @@ import requests
 import openai
 import sqlite3
 from sqlite3 import Error
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
+import googlemaps
+import polyline
+import folium
+from gmaps_api import get_long_lat, get_route, create_map
+from pprint import pprint
+from datetime import datetime, timedelta
+import json
 
 # Load environment variables from .env file
 load_dotenv()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 weather_api_key = os.getenv('OPENWEATHERMAP_API_KEY')
+API_KEY = os.getenv('GM_TOKEN')
+gmaps = googlemaps.Client(key = API_KEY)
 
 # Database connection function
 def create_connection():
@@ -93,40 +102,41 @@ st.title('EcoRoute')  # App title
 st.header('Find the most fuel-efficient route for your trips')  # App header
 
 # Input fields for start and end locations
-start_location = st.text_input('Start Location')
-end_location = st.text_input('End Location')
+start_location = st.text_input('Start Location example: New York City, NY')
+end_location = st.text_input('End Location example: Los Angeles, CA')
+
+
 
 # Button to trigger route finding
 if st.button('Find Route'):
     if start_location and end_location:
-        # Geocode the start and end locations
-        start_coords = geocode_address(start_location)
-        end_coords = geocode_address(end_location)
+        # Get the route information
+        route = get_route(start_location, end_location)
+        
+        # Extract the distance and duration from the route
+        distance = route["distanceMeters"]
+        duration = timedelta(seconds=int(route["duration"][:-1]))
+        hours, remainder = divmod(duration.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        polyln = route["polyline"]["encodedPolyline"]
+    
+        # Display the route information
+        st.subheader('Route Information')
+        st.subheader(f'Distance: {distance} meters')
+        st.subheader(f'Duration: {hours} hours, {minutes} minutes, {seconds} seconds')
 
-        # Check if geocoding was successful
-        if start_coords and end_coords:
-            # Get directions using OSRM
-            directions = get_directions(start_coords, end_coords)
-            # Get weather information for the end location
-            weather = get_weather(end_location)
-            # Get eco-driving tips from ChatGPT
-            tips = get_tips(directions)
+        # Create and display the route map
+        create_map(polyln)
+        path_to_html = "route_map.html" 
 
-            # Store the route information in the database
-            store_route(start_location, end_location, directions, weather, tips)
+        with open(path_to_html, 'r') as f: 
+            html_data = f.read()
 
-            # Display route information
-            st.subheader('Route Information')
-            st.write(directions)
-
-            # Display weather information
-            st.subheader('Weather Information')
-            st.write(weather)
-
-            # Display eco-driving tips
-            st.subheader('Eco-Driving Tips')
-            st.write(tips)
-        else:
-            st.error('Unable to geocode the provided addresses.')
+        st.components.v1.html(html_data, width=1000, height=1000)
+       
     else:
-        st.error('Please enter both start and end locations')
+        st.error('Unable to geocode the provided addresses.')
+else:
+    st.error('Please enter both start and end locations')
+
+
