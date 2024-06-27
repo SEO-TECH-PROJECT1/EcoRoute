@@ -109,6 +109,9 @@ end_location = st.text_input('End Location example: Los Angeles, CA')
 
 # Button to trigger route finding
 if st.button('Find Route'):
+    st.write(f"Start: {start_location}, End: {end_location}")
+
+    # Get mock route data
     if start_location and end_location:
         # Get the route information
         route = get_route(start_location, end_location)
